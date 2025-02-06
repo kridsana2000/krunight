@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #fff5f8;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        .hidden {
+            display: none;
+        }
+        .button {
+            background-color: #ff85a2;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+            margin-top: 40px;
+            box-shadow: 0 4px 15px rgba(255, 0, 102, 0.4);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .button.show-button {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .button:hover {
+            background-color: #ff6080;
+            box-shadow: 0 6px 20px rgba(255, 0, 102, 0.6);
+        }
+        .message {
+            font-size: 36px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            transform: scale(0.9);
+            text-shadow: 3px 3px 10px rgba(255, 0, 102, 0.5);
+        }
+        .show-message {
+            opacity: 1 !important;
+            transform: scale(1) !important;
+        }
+        .balloon {
+            position: absolute;
+            width: 50px;
+            height: 70px;
+            background-color: #ff6080;
+            border-radius: 50%;
+            bottom: -100px;
+            animation: float 5s linear infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100vh); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="startScreen">
+        <button class="button" id="startBtn" onclick="startSequence()">Start</button>
+    </div>
+
+    <div class="container hidden" id="messageScreen">
+        <p class="message" id="message"></p>
+        <button class="button" id="nextBtn" onclick="nextMessage()">ถัดไป</button>
+    </div>
+    
+    <audio id="bgMusic" src="your-song.mp3"></audio>
+
+    <script>
+        let messages = [
+            "สวัสดีครับครูไนท์",
+            "วันนี้เหนื่อยมั้ยครับ",
+            "ครูทำแต่งานอย่าลืมหาเวลาพักผ่อนให้ตัวเองด้วยนะครับ",
+            "Happy birthdayนะครับ",
+            "วันเกิดปีนี้ขอให้ครูไนท์มีแต่ความสุข",
+            "ไม่ปวดหลัง",
+            "ขอให้ขึ้นคศ.5 เร็วๆแบบด่วนจี๋",
+            "สุดท้ายนี้ ครูกินลูกอมแล้วอย่าลืมแปรงฟันนะครับ",
+            "ผมมีเพลงมาให้ 1 เพลง"
+        ];
+        let messageIndex = 0;
+
+        $(document).ready(function() {
+            setTimeout(() => {
+                $('#startBtn').addClass('show-button');
+            }, 500);
+        });
+
+        function startSequence() {
+            $('#startScreen').fadeOut(300, function() {
+                $('#messageScreen').fadeIn(300, function() {
+                    fadeMessage("welcome to 06/02/25 🌹🎂", function() {
+                        $('#nextBtn').addClass('show-button');
+                    });
+                });
+            });
+        }
+
+        function fadeMessage(text, callback = null) {
+            $('#message').fadeOut(500, function() {
+                $('#message').text(text).fadeTo(1000, 1, function() {
+                    if (callback) {
+                        callback();
+                    }
+                });
+            });
+        }
+
+        function nextMessage() {
+            $('#nextBtn').removeClass('show-button');
+            if (messageIndex < messages.length) {
+                fadeMessage(messages[messageIndex], function() {
+                    $('#nextBtn').addClass('show-button');
+                });
+                messageIndex++;
+            } else {
+                playMusic();
+                launchBalloons();
+                setTimeout(() => {
+                    window.location.href = "https://www.youtube.com/watch?v=vhVBWw6rId0";
+                }, 5000);
+            }
+        }
+
+        function playMusic() {
+            document.getElementById("bgMusic").play();
+        }
+
+        function launchBalloons() {
+            for (let i = 0; i < 10; i++) {
+                let balloon = document.createElement("div");
+                balloon.classList.add("balloon");
+                balloon.style.left = Math.random() * 100 + "vw";
+                balloon.style.animationDuration = (Math.random() * 2 + 3) + "s";
+                balloon.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
+                document.body.appendChild(balloon);
+                setTimeout(() => balloon.remove(), 5000);
+            }
+        }
+    </script>
+</body>
+</html>
